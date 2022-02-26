@@ -175,26 +175,26 @@ int main() {
   // open the DOS batch file
   // ------------------------------------------------------
 
-  ofstream outbat("skyplot.bat");
+  ofstream outbat("skyplot.sh");
   if (!outbat) {
-    cerr << "Error opening sky.bat ! " << endl;
+    cerr << "Error opening skyplot.sh ! " << endl;
     return -1;
   }
 
-  outbat << "echo off " << endl;
-  outbat << "psxy elevRings.dat  -R-1.6/1.6/-1.6/1.6 -JX7.0  -W1.0p/0/0/0 "
-            "-G230 -V -M -K -P -X0.75 -Y1.0 > skyplot.ps "
+  outbat << "#!/bin/bash" << endl;
+  outbat << "gmt psxy elevRings.dat  -R-1.6/1.6/-1.6/1.6 -JX7.0  -W1.0p,0/0/0 "
+            "-G230 -V -K -P -X0.75 -Y1.0 > skyplot.ps "
          << endl;
-  outbat << "psxy cutoffRing.dat -R -JX  -W0.2t4_8:0p  -G255 -V -M -O -K -P >> "
+  outbat << "gmt psxy cutoffRing.dat -R -JX  -W0.2p,255/0/0  -G255 -V -O -K -P >> "
             "skyplot.ps "
          << endl;
-  outbat << "psxy elevRings.dat  -R -JX  -W1.0p/0/0/0  -V -M -O -K -P >> "
+  outbat << "gmt psxy elevRings.dat  -R -JX  -W1.0p,0/0/0  -V -O -K -P >> "
             "skyplot.ps "
          << endl;
-  outbat << "psxy elevRings.dat  -R -JX  -W0.5p/255/255/255  -V -M -O -K -P >> "
+  outbat << "gmt psxy elevRings.dat  -R -JX  -W0.5p,255/255/255  -V -O -K -P >> "
             "skyplot.ps "
          << endl;
-  outbat << "pstext title.txt   -R -JX  -N -V  -O -K -P >> skyplot.ps " << endl;
+  outbat << "gmt pstext title.txt   -R -JX  -N -V  -O -K -P >> skyplot.ps " << endl;
 
   // ------------------------------------------------------
   // broadcast or precise?
@@ -467,8 +467,8 @@ int main() {
       arrowsf << arrowsx[i][1] << "  " << arrowsy[i][1] << " " << dx << " "
               << dy << " 0 0 0 " << i << endl;
 
-      outbat << "psxy " << i
-             << ".sat.xy  -R -JX -W0.75p/0  -V -P -O -K >> skyplot.ps" << endl;
+      outbat << "gmt psxy " << i
+             << ".sat.xy  -R -JX -W0.75p,0/0/0  -V -P -O -K >> skyplot.ps" << endl;
     }
   }
 
@@ -659,22 +659,21 @@ int main() {
 
   nesw.close();
 
-  outbat << "psxy hr.xy  -R -JX -V  -Sc0.03 -G0/0/0  -O -K -P >> skyplot.ps "
+  outbat << "gmt psxy hr.xy  -R -JX -V  -Sc0.03 -G0/0/0  -O -K -P >> skyplot.ps "
          << endl;
-  outbat << "pstext hr.txt  -R -JX -V -G0/0/255  -O -K -P >> skyplot.ps "
+  outbat << "gmt pstext hr.txt  -R -JX -V -G0/0/255  -O -K -P >> skyplot.ps "
          << endl;
-  outbat << "psxy cross.txt  -R -JX   -V -M -O -K -P >> skyplot.ps " << endl;
-  outbat << "pstext nesw.txt  -R  -JX -O -K  -N   >> skyplot.ps " << endl;
-  outbat << "psvelo arrows.xy  -R -JX  -L  -W1.0p/255/0/0 -Se1/0.95/12 "
+  outbat << "gmt psxy cross.txt  -R -JX   -V -O -K -P >> skyplot.ps " << endl;
+  outbat << "gmt pstext nesw.txt  -R  -JX -O -K  -N   >> skyplot.ps " << endl;
+  outbat << "gmt psvelo arrows.xy  -R -JX  -L  -W1.0p,255/0/0 -Se1/0.95/12 "
             "-A0.0020/0.035/0.025 "
          << " -N  -H0 -O -K -P -V >>  skyplot.ps " << endl;
 
-  outbat << "pstext ring.txt  -R  -JX -O   -N -W255o  >> skyplot.ps " << endl;
+  outbat << "gmt pstext ring.txt  -R  -JX -O   -N -W1p  >> skyplot.ps " << endl;
 
   outbat << "echo ------------------------------ " << endl;
   outbat << "echo ------------------------------ " << endl;
   outbat << "echo View or print skyplot.ps " << endl;
-  outbat << "echo on " << endl;
 
   outbat.close();
 
