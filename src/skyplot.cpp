@@ -207,7 +207,7 @@ int main() {
     exit(0);
   } else {
     getline(inp2, tString);
-    index = tString.find("NAVIGATION");
+    index = tString.find("NAV");
     if (0 < index && index < 80) {
       out << "\n\nUsing broadcast file " << orbfile << endl;
       broadcastExist = true;
