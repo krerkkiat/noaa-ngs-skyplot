@@ -9,23 +9,11 @@
 //0104.11, SAH, Add an output operator function ( << ).
 //0105.08, SAH, add normalize function to prevent HMS output where sec = 60.0
 
-#include "datetime.h"
-
-#if !defined(MATH_)
-#include <math.h>
-#define MATH_
-#endif
-
-#if !defined(IOSTREAM_)
+#include <cmath>
 #include <iostream>
-#define IOSTREAM_
-#endif
-
-#if !defined(IOMANIP_)
 #include <iomanip>
-#define IOMANIP_
-#endif
 
+#include "datetime.h"
 
 namespace NGSdatetime {
 

@@ -3,13 +3,13 @@
 // Class definitions for SP3 file objects
 // and prototypes for precise orbit interpolation methods
 
-#if !defined( __SP3FILE__ )
-
+#ifndef __SP3FILE__
 #define __SP3FILE__
 
-#include <fstream.h>
-#include <string.h>
+#include <fstream>
+#include <string>
 #include "datetime.h"
+
 using namespace std;
 using namespace NGSdatetime;
 

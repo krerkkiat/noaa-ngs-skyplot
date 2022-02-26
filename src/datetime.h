@@ -17,13 +17,10 @@
 //   any of the representations and viewed in any other representation.
 //
 
-#if !defined( DATETIME_ )
-#define  DATETIME_
+#ifndef DATETIME_
+#define DATETIME_
 
-#if !defined(IOSTREAM_)
 #include <iostream>
-#define IOSTREAM_
-#endif
 
 namespace NGSdatetime {
 

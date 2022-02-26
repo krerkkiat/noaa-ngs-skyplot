@@ -5,39 +5,15 @@
 
 //ver. 200108.17
 
-#if !defined( __RINEX__ )
+#ifndef __RINEX__
 #define __RINEX__
 
-#if !defined( FSTREAM_ )
 #include <fstream>
-#define FSTREAM_
-#endif
-
-#if !defined( IOSTREAM_ )
 #include <iostream>
-#define IOSTREAM_
-#endif
-
-#if !defined( SSTREAM_ )
 #include <sstream>
-#define SSTREAM_
-#endif
-
-#if !defined( STRING_ )
 #include <string>
-#define STRING_
-#endif
-
-#if !defined( LIST_ )
 #include <list>
-#define LIST_
-#endif
-
-#if !defined( DATETIME_H_ )
 #include  "datetime.h"
-#define DATETIME_H_
-#endif
-
 
 namespace NGSrinex {
 

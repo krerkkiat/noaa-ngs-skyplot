@@ -4,8 +4,11 @@
 
 #include <sstream>
 #include <iomanip>
+#include <cmath>
+
 #include "datetime.h"
-#include "intrpSP3.h"
+#include "intrpsp3.h"
+
 using namespace std;
 using namespace NGSdatetime;
 
@@ -416,7 +419,7 @@ int SP3File::getSVPosVel(DateTime tuser, unsigned short PRNid, double rvec[])
 	 {
 	   for( j = 1; j <= numberSP3svs + 1; j++ )
 	   {
-             if( fileStream.getline(inputRecC, 255, '\n') == NULL )
+             if( fileStream.getline(inputRecC, 255, '\n'))
 	     {
 		 cerr << "Error skipping lines in the SP3 file." << endl;
 		 return( -1 );
@@ -434,14 +437,14 @@ int SP3File::getSVPosVel(DateTime tuser, unsigned short PRNid, double rvec[])
          for( i = m; i <= jmax; i++ )
 	 {
 	   l = i - jmin + 1;
-           if( fileStream.getline(inputRecC, 255, '\n') == NULL )
+           if( fileStream.getline(inputRecC, 255, '\n'))
 	   {
 	      cerr << "Error skipping time tag line in the SP3 file." << endl;
 	      return( -1 );
            }
 	   for( k = 1; k <= numberSP3svs; k++ )
 	   {
-              if( fileStream.getline(inputRecC, 255, '\n') == NULL )
+              if( fileStream.getline(inputRecC, 255, '\n'))
               {
                cerr << "Error reading input values in the SP3 file." << endl;
 	       return( -1 );

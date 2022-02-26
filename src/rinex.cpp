@@ -7,69 +7,21 @@
 //           National Geodetic Survey, NOAA
 //           Silver Spring, Maryland  20910
 //
+#include <climits>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <string>
+#include <limits>
+#include <algorithm>  // for replace() function
+#include <cstring>
+#include <cstdlib>
+#include <cmath>
+#include <cctype>
 
 #include "rinex.h"
-
-#if !defined(IOSTREAM_)
-#include <iostream>
-#define IOSTREAM_
-#endif
-
-#if !defined(FSTREAM_)
-#include <fstream>
-#define FSTREAM_
-#endif
-
-#if !defined(SSTREAM_)
-#include <sstream>
-#define SSTREAM_
-#endif
-
-#if !defined(IOMANIP_)
-#include <iomanip>
-#define IOMANIP_
-#endif
-
-#if !defined(STRING_)
-#include <string>
-#define STRING_
-#endif
-
-#if !defined(LIMITS_)
-#include <limits>
-#define LIMITS_
-#endif
-
-#if !defined(ALGORITHM_)
-#include <algorithm>  // for replace() function
-#define ALGORITHM_
-#endif
-
-#if !defined(CSTRING_)
-#include <cstring>
-#define CSTRING_
-#endif
-
-#if !defined(CSTDLIB_)
-#include <cstdlib>
-#define CSTDLIB_
-#endif
-
-#if !defined(CMATH_)
-#include <cmath>
-#define CMATH_
-#endif
-
-#if !defined(CCTYPE_)
-#include <cctype>
-#define CCTYPE_
-#endif
-
-#if !defined(DATETIME_H_)
 #include "datetime.h"
-#define DATETIME_H_
-#endif
-
 
 namespace NGSrinex {
 

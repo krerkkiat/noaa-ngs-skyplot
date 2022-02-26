@@ -1,11 +1,10 @@
-#pragma hdrstop
-#include <fstream.h> // this includes iostream.h
-#include <iomanip.h>
-#include <math.h>
+#include <fstream> // this includes iostream.h
+#include <iomanip>
+#include <cmath>
 
 #include "consts.h"
 #include "datetime.h"
-#include "intrpSP3.h"
+#include "intrpsp3.h"
 #include "physcon.h"
 #include "rinex.h"
 
@@ -289,7 +288,7 @@ int main() {
   // create input files for GMT
   // ------------------------------------------------------
 
-  system(" del *.sat.xy arrows.xy elevRings.dat ring.txt nesw.txt skyplot.ps "
+  system(" rm -f *.sat.xy arrows.xy elevRings.dat ring.txt nesw.txt skyplot.ps "
          ".gmt* 2> del.me");
   ofstream satcoords;
 
@@ -682,7 +681,7 @@ int main() {
   out << "\n\nNormal Termination " << endl;
 
   out.close();
-  system(" del del.me  "); // cleanup
+  system(" rm -f del.me  "); // cleanup
   // system("skyplot.bat 1> gmt.messages ");
   // system("del .gmt* ring.txt arrows.xy *.sat.xy title.txt hr.txt ");
 
