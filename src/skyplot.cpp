@@ -1,6 +1,6 @@
+#include <cmath>
 #include <fstream> // this includes iostream.h
 #include <iomanip>
-#include <cmath>
 
 #include "consts.h"
 #include "datetime.h"
@@ -185,16 +185,19 @@ int main() {
   outbat << "gmt psxy elevRings.dat  -R-1.6/1.6/-1.6/1.6 -JX7.0  -W1.0p,0/0/0 "
             "-G230 -V -K -P -X0.75 -Y1.0 > skyplot.ps "
          << endl;
-  outbat << "gmt psxy cutoffRing.dat -R -JX  -W0.2p,255/0/0  -G255 -V -O -K -P >> "
-            "skyplot.ps "
-         << endl;
+  outbat
+      << "gmt psxy cutoffRing.dat -R -JX  -W0.2p,255/0/0  -G255 -V -O -K -P >> "
+         "skyplot.ps "
+      << endl;
   outbat << "gmt psxy elevRings.dat  -R -JX  -W1.0p,0/0/0  -V -O -K -P >> "
             "skyplot.ps "
          << endl;
-  outbat << "gmt psxy elevRings.dat  -R -JX  -W0.5p,255/255/255  -V -O -K -P >> "
-            "skyplot.ps "
+  outbat
+      << "gmt psxy elevRings.dat  -R -JX  -W0.5p,255/255/255  -V -O -K -P >> "
+         "skyplot.ps "
+      << endl;
+  outbat << "gmt pstext title.txt   -R -JX  -N -V  -O -K -P >> skyplot.ps "
          << endl;
-  outbat << "gmt pstext title.txt   -R -JX  -N -V  -O -K -P >> skyplot.ps " << endl;
 
   // ------------------------------------------------------
   // broadcast or precise?
@@ -468,7 +471,8 @@ int main() {
               << dy << " 0 0 0 " << i << endl;
 
       outbat << "gmt psxy " << i
-             << ".sat.xy  -R -JX -W0.75p,0/0/0  -V -P -O -K >> skyplot.ps" << endl;
+             << ".sat.xy  -R -JX -W0.75p,0/0/0  -V -P -O -K >> skyplot.ps"
+             << endl;
     }
   }
 
@@ -659,8 +663,9 @@ int main() {
 
   nesw.close();
 
-  outbat << "gmt psxy hr.xy  -R -JX -V  -Sc0.03 -G0/0/0  -O -K -P >> skyplot.ps "
-         << endl;
+  outbat
+      << "gmt psxy hr.xy  -R -JX -V  -Sc0.03 -G0/0/0  -O -K -P >> skyplot.ps "
+      << endl;
   outbat << "gmt pstext hr.txt  -R -JX -V -G0/0/255  -O -K -P >> skyplot.ps "
          << endl;
   outbat << "gmt psxy cross.txt  -R -JX   -V -O -K -P >> skyplot.ps " << endl;

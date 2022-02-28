@@ -24,84 +24,82 @@
 
 namespace NGSdatetime {
 
-   using std::ostream;
+using std::ostream;
 
-   typedef struct{
-      long        GPSWeek;
-      double      secsOfWeek;
-   }  GPSTime;
+typedef struct {
+  long GPSWeek;
+  double secsOfWeek;
+} GPSTime;
 
-   typedef struct{
-      long        mjd;
-      double      fracOfDay;
-   }  MJD;
+typedef struct {
+  long mjd;
+  double fracOfDay;
+} MJD;
 
-   typedef struct{
-      long         year;
-      long         dayOfYear;
-      long         hour;
-      long         min;
-      double       sec;
-   }  YDOYHMS;
+typedef struct {
+  long year;
+  long dayOfYear;
+  long hour;
+  long min;
+  double sec;
+} YDOYHMS;
 
-   typedef struct{
-      long         year;
-      long         month;
-      long         day;
-      long         hour;
-      long         min;
-      double       sec;
-   }  YMDHMS;
+typedef struct {
+  long year;
+  long month;
+  long day;
+  long hour;
+  long min;
+  double sec;
+} YMDHMS;
 
-   class DateTime
-   {
-      friend ostream &operator<<( ostream &output, DateTime &dt );
+class DateTime {
+  friend ostream &operator<<(ostream &output, DateTime &dt);
 
-      public:
-         // constructors
-         DateTime();
-         DateTime( GPSTime gpstime );
-         DateTime( MJD  mjd );
-         DateTime( YDOYHMS yearDoyHMS );
-         DateTime( YMDHMS yearMonthDayHMS );
-         DateTime( long year, long month, long day,
-	           long hour, long min, double sec );
+public:
+  // constructors
+  DateTime();
+  DateTime(GPSTime gpstime);
+  DateTime(MJD mjd);
+  DateTime(YDOYHMS yearDoyHMS);
+  DateTime(YMDHMS yearMonthDayHMS);
+  DateTime(long year, long month, long day, long hour, long min, double sec);
 
-         // destructor
-         ~DateTime();
+  // destructor
+  ~DateTime();
 
-         // initializers
-         void  SetGPSTime( GPSTime gpstime );
-         void  SetMJD( MJD  mjd );
-         void  SetYDOYHMS( YDOYHMS yearDoyHMS );
-         void  SetYMDHMS( YMDHMS yearMonthDayHMS );
-         void  SetYMDHMS( long year, long month, long day,
-	                  long hour, long min, double sec );
+  // initializers
+  void SetGPSTime(GPSTime gpstime);
+  void SetMJD(MJD mjd);
+  void SetYDOYHMS(YDOYHMS yearDoyHMS);
+  void SetYMDHMS(YMDHMS yearMonthDayHMS);
+  void SetYMDHMS(long year, long month, long day, long hour, long min,
+                 double sec);
 
-         // selectors
-         GPSTime      GetGPSTime();
-         MJD          GetMJD();
-         YDOYHMS      GetYDOYHMS();
-         YMDHMS       GetYMDHMS();
+  // selectors
+  GPSTime GetGPSTime();
+  MJD GetMJD();
+  YDOYHMS GetYDOYHMS();
+  YMDHMS GetYMDHMS();
 
-         // manipulators
-         const DateTime &operator=(const DateTime &DT2);
-	 DateTime* operator&(DateTime input);
+  // manipulators
+  const DateTime &operator=(const DateTime &DT2);
+  DateTime *operator&(DateTime input);
 
-         DateTime operator + ( const double days );
-         double   operator - ( const DateTime &DT2 );
+  DateTime operator+(const double days);
+  double operator-(const DateTime &DT2);
 
-         bool    operator == ( const DateTime &DT2 );
-         bool    operator != ( const DateTime &DT2 );
-         bool    operator >  ( const DateTime &DT2 );
-         bool    operator >= ( const DateTime &DT2 );
-         bool    operator <  ( const DateTime &DT2 );
-         bool    operator <= ( const DateTime &DT2 );
+  bool operator==(const DateTime &DT2);
+  bool operator!=(const DateTime &DT2);
+  bool operator>(const DateTime &DT2);
+  bool operator>=(const DateTime &DT2);
+  bool operator<(const DateTime &DT2);
+  bool operator<=(const DateTime &DT2);
 
-      private:
-         long        mjd;
-         double      fractionOfDay;
-   };
+private:
+  long mjd;
+  double fractionOfDay;
+};
 
 } // namespace NGSdatetime
 
