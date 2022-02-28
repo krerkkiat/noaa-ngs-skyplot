@@ -157,12 +157,12 @@ int main() {
   outtt.setf(ios::fixed, ios::floatfield);
 
   outtt << setw(2) << setprecision(0);
-  outtt << "0 2.2  14 0 0 CM " << stemp << endl;
-  outtt << "0 2.1  10 0 0 CM Lat: " << setw(10) << setprecision(4)
+  outtt << "0 2.4  12 0 0 CM " << stemp << endl;
+  outtt << "0 2.2  7 0 0 CM Lat: " << setw(10) << setprecision(4)
         << lat * 180.0 / jpi << "\312    Lon:  " << setw(10) << setprecision(4)
         << lon * 180.0 / jpi << "\312    Ell Ht:  " << setw(10)
         << setprecision(1) << htt << " (m) " << endl;
-  outtt << "0 2.0  10 0 0 CM GPS Time:   Start " << setw(2) << setprecision(0)
+  outtt << "0 2.0  7 0 0 CM GPS Time:   Start " << setw(2) << setprecision(0)
         << year1 << "/" << padZeros(mon1) << "/" << padZeros(day1) << "  "
         << padZeros(hr1) << ":" << padZeros(min1) << ":" << padZeros(sec1)
         << "      Stop " << year2 << "/" << padZeros(mon2) << "/"
