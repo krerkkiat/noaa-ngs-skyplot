@@ -2,6 +2,8 @@
 #include <fstream> // this includes iostream.h
 #include <iomanip>
 
+#include <cxxopts.hpp>
+
 #include "consts.h"
 #include "datetime.h"
 #include "intrpsp3.h"
@@ -38,7 +40,7 @@ double bcpos[4], bcvel[3];
 double t_r;
 int BRprns[MAXSVS];
 #pragma argsused
-int main() {
+int main(int argc, char** argv) {
   int i, j, ierr, prnNum;
   double jpi = 4.0 * atan(1.0);
   SP3File mysp3;
@@ -84,22 +86,39 @@ int main() {
     BRprns[i] = i;
   }
 
+  std::string input_filename;
+
+  // Parse command line arguments.
+  cxxopts::Options options("Skyplot", "NOAA NGS skyplot program");
+  // clang-format off
+  options.add_options()
+    ("h,help", "Show help")
+    ("f,file", "Input file name", cxxopts::value(input_filename)->default_value("skyplot.inp"));
+  // clang-format on
+
+  auto result = options.parse(argc, argv);
+
+  if (result["help"].as<bool>()) {
+    std::cout << options.help() << std::endl;
+    return 0;
+  }
+
   // ------------------------------------------------------
   // open log file
   // ------------------------------------------------------
 
   ofstream out("skyplot.log");
   if (!out) {
-    cerr << "Error opening skyplot.out ! " << endl;
+    cerr << "Error opening skyplot.log ! " << endl;
     return -1;
   }
 
   out.setf(ios::fixed, ios::floatfield);
 
-  ifstream inp("skyplot.inp");
+  ifstream inp(input_filename.c_str());
   if (!inp) {
-    cerr << "Error opening skyplot.inp ! " << endl;
-    out << "Error opening skyplot.inp ! " << endl << endl;
+    cerr << "Error opening " << input_filename << " ! " << endl;
+    out << "Error opening " << input_filename << " ! " << endl << endl;
     out << "\n\nABNORMAL Termination " << endl;
     out.close();
     return -1;
