@@ -675,10 +675,11 @@ int main() {
          << " -N  -H0 -O -K -P -V >>  skyplot.ps " << endl;
 
   outbat << "gmt pstext ring.txt  -R  -JX -O   -N -W1p  >> skyplot.ps " << endl;
+  outbat << "gmt psconvert skyplot.ps -A -Tg" << endl;
 
   outbat << "echo ------------------------------ " << endl;
   outbat << "echo ------------------------------ " << endl;
-  outbat << "echo View or print skyplot.ps " << endl;
+  outbat << "echo \"View or print skyplot.ps (or skyplot.png)\"" << endl;
 
   outbat.close();
 
