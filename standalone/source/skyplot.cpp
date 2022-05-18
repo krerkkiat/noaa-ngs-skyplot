@@ -3,6 +3,8 @@
 #include <iomanip>
 
 #include <cxxopts.hpp>
+#include <fmt/core.h>
+#include <fmt/ostream.h>
 
 #include "consts.h"
 #include "datetime.h"
@@ -117,9 +119,9 @@ int main(int argc, char** argv) {
 
   ifstream inp(input_filename.c_str());
   if (!inp) {
-    cerr << "Error opening " << input_filename << " ! " << endl;
-    out << "Error opening " << input_filename << " ! " << endl << endl;
-    out << "\n\nABNORMAL Termination " << endl;
+    fmt::print(cerr, "Error opening '{}'!\n", input_filename);
+    fmt::print(out, "Error opening '{}'!\n\n", input_filename);
+    out << "\n\nABNORMAL Termination \n";
     out.close();
     return -1;
   }
@@ -132,16 +134,11 @@ int main(int argc, char** argv) {
   inp.close();
 
   out << "Input file: " << endl;
-  out.precision(0);
-  out << year1 << " " << mon1 << " " << day1 << " " << hr1 << " " << min1 << " "
-      << sec1 << endl;
-  out << year2 << " " << mon2 << " " << day2 << " " << hr2 << " " << min2 << " "
-      << sec2 << endl;
+  fmt::print(out, "{} {} {} {} {} {}\n", year1, mon1, day1, hr1, min1, sec1);
+  fmt::print(out, "{} {} {} {} {} {}\n", year2, mon2, day2, hr2, min2, sec2);
   out << orbfile << endl;
-  out.precision(3);
-  out << stemp << " " << xsta[0] << " " << xsta[1] << " " << xsta[2] << " "
-      << endl;
-  out << cutoffAngle << endl;
+  fmt::print(out, "{} {:0.3f} {:0.3f} {:0.3f}\n", stemp, xsta[0], xsta[1], xsta[2]);
+  fmt::print(out, "{:0.3f}\n", cutoffAngle);
 
   dist3d = sqrt(xsta[0] * xsta[0] + xsta[1] * xsta[1] + xsta[2] * xsta[2]);
 
@@ -200,23 +197,18 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  outbat << "#!/bin/bash" << endl;
+  outbat << "#!/bin/bash\n";
   outbat << "gmt psxy elevRings.dat  -R-1.6/1.6/-1.6/1.6 -JX7.0  -W1.0p,0/0/0 "
-            "-G230 -V -K -P -X0.75 -Y1.0 > skyplot.ps "
-         << endl;
+            "-G230 -V -K -P -X0.75 -Y1.0 > skyplot.ps \n";
   outbat
       << "gmt psxy cutoffRing.dat -R -JX  -W0.2p,255/0/0  -G255 -V -O -K -P >> "
-         "skyplot.ps "
-      << endl;
+         "skyplot.ps \n";
   outbat << "gmt psxy elevRings.dat  -R -JX  -W1.0p,0/0/0  -V -O -K -P >> "
-            "skyplot.ps "
-         << endl;
+            "skyplot.ps \n";
   outbat
       << "gmt psxy elevRings.dat  -R -JX  -W0.5p,255/255/255  -V -O -K -P >> "
-         "skyplot.ps "
-      << endl;
-  outbat << "gmt pstext title.txt   -R -JX  -N -V  -O -K -P >> skyplot.ps "
-         << endl;
+         "skyplot.ps \n";
+  outbat << "gmt pstext title.txt   -R -JX  -N -V  -O -K -P >> skyplot.ps \n";
 
   // ------------------------------------------------------
   // broadcast or precise?
@@ -224,55 +216,39 @@ int main(int argc, char** argv) {
 
   ifstream inp2(orbfile.c_str());
   if (!inp2) {
-    cerr << "Warning: " << orbfile << " does not exist " << endl;
+    fmt::print(cerr, "Warning: '{}' does not exist \n", orbfile);
     inp2.close();
     exit(0);
   } else {
     getline(inp2, tString);
     index = tString.find("NAV");
     if (0 < index && index < 80) {
-      out << "\n\nUsing broadcast file " << orbfile << endl;
+      fmt::print(out, "\n\nUsing broadcast file '{}'\n", orbfile);
       broadcastExist = true;
 
       RinexNavFile mynav;
       try {
         mynav.setPathFilenameMode(orbfile, ios_base::in);
       } catch (RinexFileException &openExcep) {
-        cout << "Error opening file: " << orbfile << endl;
-        cout << "Rinex File Exception is: " << endl
-             << openExcep.getMessage() << endl;
-        cout << endl
-             << "Error Messages for " << orbfile << " :" << endl
-             << mynav.getErrorMessages() << endl
-             << endl;
-        cout << endl
-             << "Format Warnings for " << orbfile << " :" << endl
-             << mynav.getWarningMessages() << endl
-             << endl
-             << endl;
-        cout << "Terminating program POINT due to an error." << endl;
+        fmt::print(cout, "Error opening file: {}\n", orbfile);
+        fmt::print(cout, "Rinex File Exception is: \n{}\n", openExcep.getMessage());
+        fmt::print(cout, "\nError Messages for {} :\n{}\n\n", orbfile, mynav.getErrorMessages());
+        fmt::print(cout, "\nFormat Warnings for {} :\n{}\n\n\n", orbfile, mynav.getWarningMessages());
+        cout << "Terminating program POINT due to an error.\n";
       }
 
       // cout << endl << "NV::Header for RINEX NAV file: " << orbfile << endl;
       try {
         bcread(mynav, out);
       } catch (RequiredRecordMissingException &headerExcep) {
-        cout << "RequiredRecordMissingException is: " << endl
-             << headerExcep.getMessage() << endl;
-        cout << endl
-             << "Error Messages for " << orbfile << " :" << endl
-             << mynav.getErrorMessages() << endl
-             << endl;
-        cout << endl
-             << "Format Warnings for " << orbfile << " :" << endl
-             << mynav.getWarningMessages() << endl
-             << endl
-             << endl;
-        cout << "Terminating program POINT due to an error." << endl;
+        fmt::print(cout, "RequiredRecordMissingException is: \n{}\n", headerExcep.getMessage());
+        fmt::print(cout, "\nError Messages for {} :\n{}\n\n", orbfile, mynav.getErrorMessages());
+        fmt::print(cout, "\nFormat Warnings for {} :\n{}\n\n\n", orbfile, mynav.getWarningMessages());
+        cout << "Terminating program POINT due to an error.\n";
       }
 
     } else {
-      cout << "\n\nUsing sp3 file " << orbfile << endl;
+      fmt::print(cout, "\n\nUsing sp3 file {}\n", orbfile);
       mysp3.setPathFilenameMode(orbfile.c_str(), ios_base::in);
       mysp3.readHeader();
     }
@@ -316,19 +292,19 @@ int main(int argc, char** argv) {
 
   ofstream hourstamps("hr.txt");
   if (!hourstamps) {
-    cout << "ERROR: cant open hr.txt " << endl;
+    cout << "ERROR: cant open hr.txt \n";
     exit(0);
   }
 
   ofstream hourdots("hr.xy");
   if (!hourdots) {
-    cout << "ERROR: cant open hr.xy " << endl;
+    cout << "ERROR: cant open hr.xy \n";
     exit(0);
   }
 
   ofstream azelOut("skyplot.AzEl");
   if (!azelOut) {
-    cout << "ERROR: cant open skyplot.AzEl " << endl;
+    cout << "ERROR: cant open skyplot.AzEl \n";
     exit(0);
   }
 
@@ -436,10 +412,8 @@ int main(int argc, char** argv) {
             /* cout << "hourstamp " << tt << " " << currEpoch <<
                "  " << ymdhms.hour <<   endl; */
 
-            hourstamps << (xmap + 0.02) << " " << ymap << " 6 0 0 ML "
-                       << (int)ymdhms.hour << "h" << endl;
-
-            hourdots << xmap << " " << ymap << endl;
+            fmt::print(hourstamps, "{} {} 6 0 0 ML {}h\n", (xmap + 0.02), ymap, (int) ymdhms.hour);
+            fmt::print(hourdots, "{} {}\n", xmap, ymap);
           }
 
           // save arrow info
@@ -459,7 +433,7 @@ int main(int argc, char** argv) {
   hourdots.close();
   azelOut.close();
 
-  out << "\n\nFinished writing azimuth/elevation " << endl;
+  out << "\n\nFinished writing azimuth/elevation \n";
 
   // ------------------------------------------------------
   // create arrow input files for GMT
@@ -469,7 +443,7 @@ int main(int argc, char** argv) {
 
   ofstream arrowsf("arrows.xy");
   if (!arrowsf) {
-    cout << "ERROR: cant open arrows.xy " << endl;
+    cout << "ERROR: cant open arrows.xy \n";
     exit(0);
   }
 
@@ -486,12 +460,9 @@ int main(int argc, char** argv) {
       dx = rad * sin(az);
       dy = rad * cos(az);
 
-      arrowsf << arrowsx[i][1] << "  " << arrowsy[i][1] << " " << dx << " "
-              << dy << " 0 0 0 " << i << endl;
+      fmt::print(arrowsf, "{}  {} {} {} 0 0 0 {}\n", arrowsx[i][1], arrowsy[i][1], dx, dy, i);
 
-      outbat << "gmt psxy " << i
-             << ".sat.xy  -R -JX -W0.75p,0/0/0  -V -P -O -K >> skyplot.ps"
-             << endl;
+      fmt::print(outbat, "gmt psxy {}.sat.xy  -R -JX -W0.75p,0/0/0  -V -P -O -K >> skyplot.ps\n", i);
     }
   }
 
@@ -503,13 +474,13 @@ int main(int argc, char** argv) {
 
   ofstream outf("elevRings.dat");
   if (!outf) {
-    cerr << "Error opening elevRings.dat ! " << endl;
+    cerr << "Error opening elevRings.dat ! \n";
     return -1;
   }
 
   ofstream outCut("cutoffRing.dat");
   if (!outCut) {
-    cerr << "Error opening cutOffRing.dat ! " << endl;
+    cerr << "Error opening cutOffRing.dat ! \n";
     return -1;
   }
 
@@ -547,7 +518,7 @@ int main(int argc, char** argv) {
 
   ofstream outcross("cross.txt");
   if (!outcross) {
-    cerr << "Error opening cross.txt ! " << endl;
+    cerr << "Error opening cross.txt ! \n";
     return -1;
   }
 
@@ -557,17 +528,8 @@ int main(int argc, char** argv) {
 
   // nesw cross
 
-  outcross << ">" << endl;
-  outcross << setw(18) << setprecision(8) << (120 * jpi / 180.0) << setw(18)
-           << setprecision(8) << 0 << endl;
-  outcross << setw(18) << setprecision(8) << (-120 * jpi / 180.0) << setw(18)
-           << setprecision(8) << 0 << endl;
-
-  outcross << ">" << endl;
-  outcross << setw(18) << setprecision(8) << 0 << setw(18) << setprecision(8)
-           << (120 * jpi / 180.0) << endl;
-  outcross << setw(18) << setprecision(8) << 0 << setw(18) << setprecision(8)
-           << (-120 * jpi / 180.0) << endl;
+  fmt::print(outcross, ">\n{:18.8f}{:18.8f}\n{:18.8f}{:18.8f}\n", (120 * jpi / 180.0), 0.0, (-120 * jpi / 180.0), 0.0);
+  fmt::print(outcross, ">\n{:18.8f}{:18.8f}\n{:18.8f}{:18.8f}\n", 0.0, (120 * jpi / 180.0), 0.0, (-120 * jpi / 180.0));
 
   // nw/sw
   double rtemp = 92.0;
@@ -618,7 +580,7 @@ int main(int argc, char** argv) {
 
   ofstream outring("ring.txt");
   if (!outring) {
-    cerr << "Error opening ring.txt ! " << endl;
+    cerr << "Error opening ring.txt ! \n";
     return -1;
   }
 
@@ -626,24 +588,19 @@ int main(int argc, char** argv) {
   y = 0;
   x = jpi / 2.0 - 0.0;
   //   \312 make the degree symbol
-  outring << x << "  " << y << " 8 0 0 CM  0\312" << endl;
-  ;
+  fmt::print(outring, "{}  {} 8 0 0 CM  0\312\n", x, y);
 
   x = jpi / 2.0 - 30.0 * jpi / 180.0;
-  outring << x << "  " << y << " 8 0 0 CM 30\312" << endl;
-  ;
+  fmt::print(outring, "{}  {} 8 0 0 CM  30\312\n", x, y);
 
   x = jpi / 2.0 - 60.0 * jpi / 180.0;
-  outring << x << " " << y << " 8 0 0 CM 60\312" << endl;
-  ;
+  fmt::print(outring, "{}  {} 8 0 0 CM  60\312\n", x, y);
 
   x = jpi / 2.0 - 90.0 * jpi / 180.0;
-  outring << x << " " << y << " 8 0 0 CM 90\312" << endl;
-  ;
+  fmt::print(outring, "{}  {} 8 0 0 CM  90\312\n", x, y);
 
   x = jpi / 2.0 - cutoffAngle * jpi / 180.0;
-  outring << -x << " " << y << " 8 0 0 CM " << cutoffAngle << "\312" << endl;
-  ;
+  fmt::print(outring, "{}  {} 8 0 0 CM  {}\312\n", -x, y, cutoffAngle);
 
   outring.close();
 
@@ -651,7 +608,7 @@ int main(int argc, char** argv) {
 
   ofstream nesw("nesw.txt");
   if (!nesw) {
-    cerr << "Error opening nesw.txt ! " << endl;
+    cerr << "Error opening nesw.txt ! \n";
     return -1;
   }
 
@@ -666,43 +623,41 @@ int main(int argc, char** argv) {
 
   x = sin(jpi / 4.0) * (rtemp * jpi / 180.0);
   y = cos(jpi / 4.0) * (rtemp * jpi / 180.0);
-  nesw << x << " " << y << "  10 0 0 CM 45\312" << endl;
+  fmt::print(nesw, "{} {}  10 0 0 CM  45\312\n", x, y);
 
   x = sin(jpi / 4.0) * (rtemp * jpi / 180.0);
   y = -cos(jpi / 4.0) * (rtemp * jpi / 180.0);
-  nesw << x << " " << y << "  10 0 0 CM 135\312" << endl;
+  fmt::print(nesw, "{} {}  10 0 0 CM  135\312\n", x, y);
 
   x = -sin(jpi / 4.0) * (rtemp * jpi / 180.0);
   y = -cos(jpi / 4.0) * (rtemp * jpi / 180.0);
-  nesw << x << " " << y << "  10 0 0 CM 225\312" << endl;
+  fmt::print(nesw, "{} {}  10 0 0 CM  225\312\n", x, y);
 
   x = -sin(jpi / 4.0) * (rtemp * jpi / 180.0);
   y = cos(jpi / 4.0) * (rtemp * jpi / 180.0);
-  nesw << x << " " << y << "  10 0 0 CM 315\312" << endl;
+  fmt::print(nesw, "{} {}  10 0 0 CM  315\312\n", x, y);
 
   nesw.close();
 
   outbat
-      << "gmt psxy hr.xy  -R -JX -V  -Sc0.03 -G0/0/0  -O -K -P >> skyplot.ps "
-      << endl;
-  outbat << "gmt pstext hr.txt  -R -JX -V -G0/0/255  -O -K -P >> skyplot.ps "
-         << endl;
-  outbat << "gmt psxy cross.txt  -R -JX   -V -O -K -P >> skyplot.ps " << endl;
-  outbat << "gmt pstext nesw.txt  -R  -JX -O -K  -N   >> skyplot.ps " << endl;
+      << "gmt psxy hr.xy  -R -JX -V  -Sc0.03 -G0/0/0  -O -K -P >> skyplot.ps \n";
+  outbat << "gmt pstext hr.txt  -R -JX -V -G0/0/255  -O -K -P >> skyplot.ps \n";
+  outbat << "gmt psxy cross.txt  -R -JX   -V -O -K -P >> skyplot.ps \n";
+  outbat << "gmt pstext nesw.txt  -R  -JX -O -K  -N   >> skyplot.ps \n";
   outbat << "gmt psvelo arrows.xy  -R -JX  -L  -W1.0p,255/0/0 -Se1/0.95/12 "
             "-A0.0020/0.035/0.025 "
-         << " -N  -H0 -O -K -P -V >>  skyplot.ps " << endl;
+         << " -N  -H0 -O -K -P -V >>  skyplot.ps \n";
 
-  outbat << "gmt pstext ring.txt  -R  -JX -O   -N -W1p  >> skyplot.ps " << endl;
-  outbat << "gmt psconvert skyplot.ps -A -Tg" << endl;
+  outbat << "gmt pstext ring.txt  -R  -JX -O   -N -W1p  >> skyplot.ps \n";
+  outbat << "gmt psconvert skyplot.ps -A -Tg\n";
 
-  outbat << "echo ------------------------------ " << endl;
-  outbat << "echo ------------------------------ " << endl;
-  outbat << "echo \"View or print skyplot.ps (or skyplot.png)\"" << endl;
+  outbat << "echo ------------------------------ \n";
+  outbat << "echo ------------------------------ \n";
+  outbat << "echo \"View or print skyplot.ps (or skyplot.png)\"\n";
 
   outbat.close();
 
-  out << "\n\nNormal Termination " << endl;
+  out << "\n\nNormal Termination \n";
 
   out.close();
   system(" rm -f del.me  "); // cleanup
@@ -710,7 +665,7 @@ int main(int argc, char** argv) {
   // system("del .gmt* ring.txt arrows.xy *.sat.xy title.txt hr.txt ");
 
   cerr << "\n\nNormal Termination.   "
-       << "Issue the command 'skyplot.bat' to generate 'skyplot.ps' " << endl;
+       << "Issue the command 'skyplot.bat' to generate 'skyplot.ps' \n";
 
   return 0;
 }
@@ -749,7 +704,7 @@ void xyz2llh(double a, double finverse, double x, double y, double z,
   delta = 1.0;
 
   if (sqrt(x * x + y * y) < 1.0e-10) {
-    cout << "ERROR: attempting square root of zero in xyz2llh " << endl;
+    cout << "ERROR: attempting square root of zero in xyz2llh \n";
     exit(0);
   }
 
@@ -950,8 +905,7 @@ int bcorb(double tc, int isv, double recf[4], double vecf[3]) {
   jxco = n1;
   ierr = bccalc(tcx, isv, recf1, vecf1);
   if (ierr != 0) {
-    printf("\nERROR returned from jxco=n1 bccalc for tcx = %lf isv: %2d\n", tcx,
-           isv);
+    fmt::print(cout, "\nERROR returned from jxco=n1 bccalc for tcx = {:f} isv: {:2d}\n", tcx, isv);
     return (ierr);
   }
 
@@ -961,8 +915,7 @@ int bcorb(double tc, int isv, double recf[4], double vecf[3]) {
   jxco = n2;
   ierr = bccalc(tcx, isv, recf2, vecf2);
   if (ierr != 0) {
-    cout << "\nERROR returned from jxco=n2 bccalc for tcx = " << tcx
-         << " isv: " << isv << endl;
+    fmt::print(cout, "\nERROR returned from jxco=n2 bccalc for tcx = {} isv: {}\n", tcx, isv);
     return (ierr);
   }
 

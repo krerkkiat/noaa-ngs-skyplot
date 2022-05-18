@@ -16,6 +16,13 @@ CPMAddPackage(
   OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
 )
 
+CPMAddPackage(
+  NAME fmt
+  GIT_TAG 8.1.1
+  GITHUB_REPOSITORY fmtlib/fmt
+  OPTIONS "FMT_INSTALL YES" # create an installable target
+)
+
 # ---- Create standalone executable ----
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
@@ -24,4 +31,4 @@ add_executable(${PROJECT_NAME} ${sources})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "Skyplot")
 
-target_link_libraries(${PROJECT_NAME} cxxopts)
+target_link_libraries(${PROJECT_NAME} cxxopts fmt::fmt)
