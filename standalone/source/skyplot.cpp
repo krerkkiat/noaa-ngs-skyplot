@@ -190,6 +190,13 @@ int main(int argc, char **argv) {
   // open the DOS batch file
   // ------------------------------------------------------
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+  ofstream outbat("skyplot.bat");
+  if (!outbat) {
+    cerr << "Error opening skyplot.bat ! " << endl;
+    return -1;
+  }
+#elif __linux__
   ofstream outbat("skyplot.sh");
   if (!outbat) {
     cerr << "Error opening skyplot.sh ! " << endl;
@@ -197,6 +204,7 @@ int main(int argc, char **argv) {
   }
 
   outbat << "#!/bin/bash\n";
+#endif
   outbat << "gmt psxy elevRings.dat  -R-1.6/1.6/-1.6/1.6 -JX7.0  -W1.0p,0/0/0 "
             "-G230 -V -K -P -X0.75 -Y1.0 > skyplot.ps \n";
   outbat
@@ -291,8 +299,14 @@ int main(int argc, char **argv) {
   // create input files for GMT
   // ------------------------------------------------------
 
-  system(" rm -f *.sat.xy arrows.xy elevRings.dat ring.txt nesw.txt skyplot.ps "
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+  system("del *.sat.xy arrows.xy elevRings.dat ring.txt nesw.txt skyplot.ps "
          ".gmt* 2> del.me");
+#elif __linux__
+  system("rm -f *.sat.xy arrows.xy elevRings.dat ring.txt nesw.txt skyplot.ps "
+         ".gmt* 2> del.me");
+#endif
   ofstream satcoords;
 
   ofstream hourstamps("hr.txt");
@@ -662,7 +676,13 @@ int main(int argc, char **argv) {
   out << "\n\nNormal Termination \n";
 
   out.close();
-  system(" rm -f del.me  "); // cleanup
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+  system("del del.me"); // cleanup
+#elif __linux__
+  system("rm -f del.me"); // cleanup
+#endif
+
   // system("skyplot.bat 1> gmt.messages ");
   // system("del .gmt* ring.txt arrows.xy *.sat.xy title.txt hr.txt ");
 

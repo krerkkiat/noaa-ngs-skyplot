@@ -52,6 +52,12 @@ Normal Termination
 bash skyplot.sh
 ```
 
+On Windows, you can instead run 
+
+```console
+skyplot.bat
+```
+
 Note:  If ERROR messages related to `psxy`, `pstext`,
 or `psvelo` appear, then it is likely that GMT is
 improperly loaded on the computer.  See the GMT home 
@@ -66,4 +72,4 @@ page ([https://docs.generic-mapping-tools.org/latest/index.html](https://docs.ge
 - Linux focus (for now).
 - Dirty hack to support RINEX file version 2.10.
 - Update [GMT](https://docs.generic-mapping-tools.org/latest/index.html)'s commands.
-- Generate a PNG file on top of the postscript file.
+- Generate a PNG file in addition to the postscript file.
