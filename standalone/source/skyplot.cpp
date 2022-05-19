@@ -42,7 +42,7 @@ double bcpos[4], bcvel[3];
 double t_r;
 int BRprns[MAXSVS];
 #pragma argsused
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   int i, j, ierr, prnNum;
   double jpi = 4.0 * atan(1.0);
   SP3File mysp3;
@@ -137,7 +137,8 @@ int main(int argc, char** argv) {
   fmt::print(out, "{} {} {} {} {} {}\n", year1, mon1, day1, hr1, min1, sec1);
   fmt::print(out, "{} {} {} {} {} {}\n", year2, mon2, day2, hr2, min2, sec2);
   out << orbfile << endl;
-  fmt::print(out, "{} {:0.3f} {:0.3f} {:0.3f}\n", stemp, xsta[0], xsta[1], xsta[2]);
+  fmt::print(out, "{} {:0.3f} {:0.3f} {:0.3f}\n", stemp, xsta[0], xsta[1],
+             xsta[2]);
   fmt::print(out, "{:0.3f}\n", cutoffAngle);
 
   dist3d = sqrt(xsta[0] * xsta[0] + xsta[1] * xsta[1] + xsta[2] * xsta[2]);
@@ -170,20 +171,18 @@ int main(int argc, char** argv) {
     cerr << "Error opening title.txt ! " << endl;
     return -1;
   }
-  outtt.setf(ios::fixed, ios::floatfield);
 
-  outtt << setw(2) << setprecision(0);
-  outtt << "0 2.4  12 0 0 CM " << stemp << endl;
-  outtt << "0 2.2  7 0 0 CM Lat: " << setw(10) << setprecision(4)
-        << lat * 180.0 / jpi << "\312    Lon:  " << setw(10) << setprecision(4)
-        << lon * 180.0 / jpi << "\312    Ell Ht:  " << setw(10)
-        << setprecision(1) << htt << " (m) " << endl;
-  outtt << "0 2.0  7 0 0 CM GPS Time:   Start " << setw(2) << setprecision(0)
-        << year1 << "/" << padZeros(mon1) << "/" << padZeros(day1) << "  "
-        << padZeros(hr1) << ":" << padZeros(min1) << ":" << padZeros(sec1)
-        << "      Stop " << year2 << "/" << padZeros(mon2) << "/"
-        << padZeros(day2) << "  " << padZeros(hr2) << ":" << padZeros(min2)
-        << ":" << padZeros(sec2) << endl;
+  fmt::print(outtt, "0 2.4  12 0 0 CM {}\n", stemp);
+  fmt::print(outtt,
+             "0 2.2  7 0 0 CM Lat: {:10.4f}\312    Lon:  {:10.4f}\312    Ell "
+             "Ht:  {:10.1f} (m) \n",
+             lat * 180.0 / jpi, lon * 180.0 / jpi, htt);
+  fmt::print(outtt,
+             "0 2.0  7 0 0 CM GPS Time:   Start {:2.0f}/{}/{}  {}:{}:{}      "
+             "Stop {}/{}/{}  {}:{}:{}\n",
+             year1, padZeros(mon1), padZeros(day1), padZeros(hr1),
+             padZeros(min1), padZeros(sec1), year2, padZeros(mon2),
+             padZeros(day2), padZeros(hr2), padZeros(min2), padZeros(sec2));
 
   outtt.close();
 
@@ -231,9 +230,12 @@ int main(int argc, char** argv) {
         mynav.setPathFilenameMode(orbfile, ios_base::in);
       } catch (RinexFileException &openExcep) {
         fmt::print(cout, "Error opening file: {}\n", orbfile);
-        fmt::print(cout, "Rinex File Exception is: \n{}\n", openExcep.getMessage());
-        fmt::print(cout, "\nError Messages for {} :\n{}\n\n", orbfile, mynav.getErrorMessages());
-        fmt::print(cout, "\nFormat Warnings for {} :\n{}\n\n\n", orbfile, mynav.getWarningMessages());
+        fmt::print(cout, "Rinex File Exception is: \n{}\n",
+                   openExcep.getMessage());
+        fmt::print(cout, "\nError Messages for {} :\n{}\n\n", orbfile,
+                   mynav.getErrorMessages());
+        fmt::print(cout, "\nFormat Warnings for {} :\n{}\n\n\n", orbfile,
+                   mynav.getWarningMessages());
         cout << "Terminating program POINT due to an error.\n";
       }
 
@@ -241,9 +243,12 @@ int main(int argc, char** argv) {
       try {
         bcread(mynav, out);
       } catch (RequiredRecordMissingException &headerExcep) {
-        fmt::print(cout, "RequiredRecordMissingException is: \n{}\n", headerExcep.getMessage());
-        fmt::print(cout, "\nError Messages for {} :\n{}\n\n", orbfile, mynav.getErrorMessages());
-        fmt::print(cout, "\nFormat Warnings for {} :\n{}\n\n\n", orbfile, mynav.getWarningMessages());
+        fmt::print(cout, "RequiredRecordMissingException is: \n{}\n",
+                   headerExcep.getMessage());
+        fmt::print(cout, "\nError Messages for {} :\n{}\n\n", orbfile,
+                   mynav.getErrorMessages());
+        fmt::print(cout, "\nFormat Warnings for {} :\n{}\n\n\n", orbfile,
+                   mynav.getWarningMessages());
         cout << "Terminating program POINT due to an error.\n";
       }
 
@@ -412,7 +417,8 @@ int main(int argc, char** argv) {
             /* cout << "hourstamp " << tt << " " << currEpoch <<
                "  " << ymdhms.hour <<   endl; */
 
-            fmt::print(hourstamps, "{} {} 6 0 0 ML {}h\n", (xmap + 0.02), ymap, (int) ymdhms.hour);
+            fmt::print(hourstamps, "{} {} 6 0 0 ML {}h\n", (xmap + 0.02), ymap,
+                       (int)ymdhms.hour);
             fmt::print(hourdots, "{} {}\n", xmap, ymap);
           }
 
@@ -460,9 +466,13 @@ int main(int argc, char** argv) {
       dx = rad * sin(az);
       dy = rad * cos(az);
 
-      fmt::print(arrowsf, "{}  {} {} {} 0 0 0 {}\n", arrowsx[i][1], arrowsy[i][1], dx, dy, i);
+      fmt::print(arrowsf, "{}  {} {} {} 0 0 0 {}\n", arrowsx[i][1],
+                 arrowsy[i][1], dx, dy, i);
 
-      fmt::print(outbat, "gmt psxy {}.sat.xy  -R -JX -W0.75p,0/0/0  -V -P -O -K >> skyplot.ps\n", i);
+      fmt::print(outbat,
+                 "gmt psxy {}.sat.xy  -R -JX -W0.75p,0/0/0  -V -P -O -K >> "
+                 "skyplot.ps\n",
+                 i);
     }
   }
 
@@ -498,8 +508,7 @@ int main(int argc, char** argv) {
     for (i = 0; i <= 360; i += 1) {
       xmap = r[j] * cos(i * jpi / 180.0);
       ymap = r[j] * sin(i * jpi / 180.0);
-      outf << setw(18) << setprecision(8) << xmap << setw(18) << setprecision(8)
-           << ymap << endl;
+      fmt::print(outf, "{:18.8f}{:18.8f}\n", xmap, ymap);
     }
   }
 
@@ -509,8 +518,7 @@ int main(int argc, char** argv) {
   for (i = 0; i <= 360; i += 1) {
     xmap = r[j] * cos(i * jpi / 180.0);
     ymap = r[j] * sin(i * jpi / 180.0);
-    outCut << setw(18) << setprecision(8) << xmap << setw(18) << setprecision(8)
-           << ymap << endl;
+    fmt::print(outCut, "{:18.8f}{:18.8f}\n", xmap, ymap);
   }
 
   outf.close();
@@ -528,47 +536,41 @@ int main(int argc, char** argv) {
 
   // nesw cross
 
-  fmt::print(outcross, ">\n{:18.8f}{:18.8f}\n{:18.8f}{:18.8f}\n", (120 * jpi / 180.0), 0.0, (-120 * jpi / 180.0), 0.0);
-  fmt::print(outcross, ">\n{:18.8f}{:18.8f}\n{:18.8f}{:18.8f}\n", 0.0, (120 * jpi / 180.0), 0.0, (-120 * jpi / 180.0));
+  fmt::print(outcross, ">\n{:18.8f}{:18.8f}\n{:18.8f}{:18.8f}\n",
+             (120 * jpi / 180.0), 0.0, (-120 * jpi / 180.0), 0.0);
+  fmt::print(outcross, ">\n{:18.8f}{:18.8f}\n{:18.8f}{:18.8f}\n", 0.0,
+             (120 * jpi / 180.0), 0.0, (-120 * jpi / 180.0));
 
   // nw/sw
   double rtemp = 92.0;
   double qtemp = 88.0;
-  outcross << ">" << endl;
-  outcross << setw(18) << setprecision(8)
-           << sin(jpi / 4.0) * (rtemp * jpi / 180.0) << setw(18)
-           << setprecision(8) << cos(jpi / 4.0) * (rtemp * jpi / 180.0) << endl;
-  outcross << setw(18) << setprecision(8)
-           << sin(jpi / 4.0) * (qtemp * jpi / 180.0) << setw(18)
-           << setprecision(8) << cos(jpi / 4.0) * (qtemp * jpi / 180.0) << endl;
+  fmt::print(outcross, ">\n{:18.8f}{:18.8f}\n",
+             sin(jpi / 4.0) * (rtemp * jpi / 180.0),
+             cos(jpi / 4.0) * (rtemp * jpi / 180.0));
+  fmt::print(outcross, "{:18.8f}{:18.8f}\n",
+             sin(jpi / 4.0) * (qtemp * jpi / 180.0),
+             cos(jpi / 4.0) * (qtemp * jpi / 180.0));
 
-  outcross << ">" << endl;
-  outcross << setw(18) << setprecision(8)
-           << -sin(jpi / 4.0) * (rtemp * jpi / 180.0) << setw(18)
-           << setprecision(8) << -cos(jpi / 4.0) * (rtemp * jpi / 180.0)
-           << endl;
-  outcross << setw(18) << setprecision(8)
-           << -sin(jpi / 4.0) * (qtemp * jpi / 180.0) << setw(18)
-           << setprecision(8) << -cos(jpi / 4.0) * (qtemp * jpi / 180.0)
-           << endl;
+  fmt::print(outcross, ">\n{:18.8f}{:18.8f}\n",
+             -sin(jpi / 4.0) * (rtemp * jpi / 180.0),
+             -cos(jpi / 4.0) * (rtemp * jpi / 180.0));
+  fmt::print(outcross, "{:18.8f}{:18.8f}\n",
+             -sin(jpi / 4.0) * (qtemp * jpi / 180.0),
+             -cos(jpi / 4.0) * (qtemp * jpi / 180.0));
 
-  outcross << ">" << endl;
-  outcross << setw(18) << setprecision(8)
-           << -sin(jpi / 4.0) * (rtemp * jpi / 180.0) << setw(18)
-           << setprecision(8) << cos(jpi / 4.0) * (rtemp * jpi / 180.0) << endl;
-  outcross << setw(18) << setprecision(8)
-           << -sin(jpi / 4.0) * (qtemp * jpi / 180.0) << setw(18)
-           << setprecision(8) << cos(jpi / 4.0) * (qtemp * jpi / 180.0) << endl;
+  fmt::print(outcross, ">\n{:18.8f}{:18.8f}\n",
+             -sin(jpi / 4.0) * (rtemp * jpi / 180.0),
+             cos(jpi / 4.0) * (rtemp * jpi / 180.0));
+  fmt::print(outcross, "{:18.8f}{:18.8f}\n",
+             -sin(jpi / 4.0) * (qtemp * jpi / 180.0),
+             cos(jpi / 4.0) * (qtemp * jpi / 180.0));
 
-  outcross << ">" << endl;
-  outcross << setw(18) << setprecision(8)
-           << sin(jpi / 4.0) * (rtemp * jpi / 180.0) << setw(18)
-           << setprecision(8) << -cos(jpi / 4.0) * (rtemp * jpi / 180.0)
-           << endl;
-  outcross << setw(18) << setprecision(8)
-           << sin(jpi / 4.0) * (qtemp * jpi / 180.0) << setw(18)
-           << setprecision(8) << -cos(jpi / 4.0) * (qtemp * jpi / 180.0)
-           << endl;
+  fmt::print(outcross, ">\n{:18.8f}{:18.8f}\n",
+             sin(jpi / 4.0) * (rtemp * jpi / 180.0),
+             -cos(jpi / 4.0) * (rtemp * jpi / 180.0));
+  fmt::print(outcross, "{:18.8f}{:18.8f}\n",
+             sin(jpi / 4.0) * (qtemp * jpi / 180.0),
+             -cos(jpi / 4.0) * (qtemp * jpi / 180.0));
 
   outcross.close();
 
@@ -614,10 +616,10 @@ int main(int argc, char** argv) {
 
   y = 15 * 3.1415 / 180;
 
-  nesw << 0 << " " << 100 * 3.1415 / 180 << "  10 0 0 CM N" << endl;
-  nesw << 0 << " " << -100 * 3.1415 / 180 << "  10 0 0 CM S" << endl;
-  nesw << -100 * 3.1415 / 180 << " " << 0 << "  10 0 0 CM W" << endl;
-  nesw << 100 * 3.1415 / 180 << " " << 0 << "  10 0 0 CM E" << endl;
+  nesw << 0 << " " << 100 * 3.1415 / 180 << "  10 0 0 CM N\n";
+  nesw << 0 << " " << -100 * 3.1415 / 180 << "  10 0 0 CM S\n";
+  nesw << -100 * 3.1415 / 180 << " " << 0 << "  10 0 0 CM W\n";
+  nesw << 100 * 3.1415 / 180 << " " << 0 << "  10 0 0 CM E\n";
 
   rtemp += 4.0;
 
@@ -639,8 +641,8 @@ int main(int argc, char** argv) {
 
   nesw.close();
 
-  outbat
-      << "gmt psxy hr.xy  -R -JX -V  -Sc0.03 -G0/0/0  -O -K -P >> skyplot.ps \n";
+  outbat << "gmt psxy hr.xy  -R -JX -V  -Sc0.03 -G0/0/0  -O -K -P >> "
+            "skyplot.ps \n";
   outbat << "gmt pstext hr.txt  -R -JX -V -G0/0/255  -O -K -P >> skyplot.ps \n";
   outbat << "gmt psxy cross.txt  -R -JX   -V -O -K -P >> skyplot.ps \n";
   outbat << "gmt pstext nesw.txt  -R  -JX -O -K  -N   >> skyplot.ps \n";
@@ -905,7 +907,10 @@ int bcorb(double tc, int isv, double recf[4], double vecf[3]) {
   jxco = n1;
   ierr = bccalc(tcx, isv, recf1, vecf1);
   if (ierr != 0) {
-    fmt::print(cout, "\nERROR returned from jxco=n1 bccalc for tcx = {:f} isv: {:2d}\n", tcx, isv);
+    fmt::print(
+        cout,
+        "\nERROR returned from jxco=n1 bccalc for tcx = {:f} isv: {:2d}\n", tcx,
+        isv);
     return (ierr);
   }
 
@@ -915,7 +920,9 @@ int bcorb(double tc, int isv, double recf[4], double vecf[3]) {
   jxco = n2;
   ierr = bccalc(tcx, isv, recf2, vecf2);
   if (ierr != 0) {
-    fmt::print(cout, "\nERROR returned from jxco=n2 bccalc for tcx = {} isv: {}\n", tcx, isv);
+    fmt::print(cout,
+               "\nERROR returned from jxco=n2 bccalc for tcx = {} isv: {}\n",
+               tcx, isv);
     return (ierr);
   }
 
